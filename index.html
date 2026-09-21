@@ -10,6 +10,7 @@
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#FBF7F4">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%8D%3C/text%3E%3C/svg%3E">
+<link rel="preload" as="image" href="foto-capa.jpg" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&family=Jost:wght@200;300;400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
@@ -35,6 +36,8 @@
   --names-tracking:0; --names-case:none; --names-lh:1.05;
   --frame:1px solid var(--gold); --frame-radius:0;
   --orn-display:block; --map-filter:sepia(.15) saturate(.85);
+  --photo-radius:999px 999px 0 0; --photo-ring:1px solid var(--gold);
+  --names-size-split:clamp(3rem,5.8vw,5.4rem);
 }
 :root[data-tema="minimalista"]{
   --bg:#FFFFFF; --bg-alt:#F5F5F3; --surface:#FFFFFF;
@@ -52,6 +55,8 @@
   --names-tracking:.14em; --names-case:lowercase; --names-lh:1.2;
   --frame:0 solid transparent; --frame-radius:0;
   --orn-display:none; --map-filter:grayscale(1) contrast(1.05);
+  --photo-radius:0; --photo-ring:1px solid var(--line);
+  --names-size-split:clamp(1.8rem,3.4vw,2.9rem);
 }
 :root[data-tema="rustico"]{
   --bg:#F3ECDD; --bg-alt:#E9E0CB; --surface:#FAF5E9;
@@ -69,6 +74,8 @@
   --names-tracking:0; --names-case:none; --names-lh:1.05;
   --frame:1px solid var(--orn); --frame-radius:22px;
   --orn-display:block; --map-filter:sepia(.35) saturate(.8);
+  --photo-radius:999px 999px 20px 20px; --photo-ring:1.5px dashed var(--orn);
+  --names-size-split:clamp(3rem,5.6vw,5.2rem);
 }
 
 /* ========================= BASE ========================= */
@@ -184,6 +191,23 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 
 .cd-done{font-family:var(--font-display);font-size:1.7rem;color:var(--accent)}
 .hero-frase{max-width:520px;margin:0 auto 2rem;color:var(--muted)}
 .hero-cta{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap}
+
+/* ---- Foto de capa: a primeira coisa que a pessoa vê ---- */
+.hero-grid{position:relative;z-index:1;width:min(1080px,100%);display:grid;justify-items:center;gap:2.2rem}
+.hero-foto{margin:0;position:relative;width:min(340px,74vw);aspect-ratio:4/5}
+.hero-foto::before{content:"";position:absolute;inset:-13px;border:var(--photo-ring);border-radius:var(--photo-radius);pointer-events:none}
+.hero-foto img{display:block;width:100%;height:100%;object-fit:cover;border-radius:var(--photo-radius);background:var(--bg-alt)}
+.hero.com-foto{padding-top:6.2rem;padding-bottom:4.5rem}
+@media(min-width:980px){
+  .hero.com-foto .hero-grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:center;gap:clamp(2.5rem,5vw,5rem)}
+  .hero.com-foto .hero-foto{width:min(440px,100%);justify-self:center}
+  .hero.com-foto .names{font-size:var(--names-size-split)}
+  .hero.com-foto .hero-frase{margin-bottom:1.8rem}
+}
+@media(prefers-reduced-motion:no-preference){
+  .hero-foto img{animation:foto-surge 1.6s cubic-bezier(.3,.7,.2,1) both}
+}
+@keyframes foto-surge{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:none}}
 
 .sprig{position:absolute;width:clamp(120px,22vw,300px);aspect-ratio:1;color:var(--orn);display:var(--orn-display);pointer-events:none}
 .sprig svg{width:100%;height:100%}
@@ -371,6 +395,8 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
   <div class="sprig bl" aria-hidden="true"><svg viewBox="0 0 200 320" preserveAspectRatio="xMidYMax meet"><use href="#sprig"/></svg></div>
   <div class="sprig br" aria-hidden="true"><svg viewBox="0 0 200 320" preserveAspectRatio="xMidYMax meet"><use href="#sprig"/></svg></div>
 
+  <div class="hero-grid">
+  <figure class="hero-foto" id="hero-foto"><img id="hero-img" width="1400" height="1050" decoding="async" fetchpriority="high" alt=""></figure>
   <div class="hero-in">
     <p class="hero-kicker">Vamos nos casar!</p>
     <h1 class="names" id="names"></h1>
@@ -384,6 +410,7 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
       <a class="btn primary" href="#rsvp">Confirmar presença</a>
       <a class="btn" href="#presentes">Ver lista de presentes</a>
     </div>
+  </div>
   </div>
 </header>
 
@@ -559,6 +586,9 @@ const CONFIG = {
   apiUrl: "https://script.google.com/macros/s/AKfycbyTi9mzal92MolyANtgz3IElmU7VkuX4RpmYa0dFewkWXV507iqGqFJ6Kr1i5HA2PSU/exec",  // URL do Apps Script (veja Code.gs). Vazio = modo demonstração
 
   noivos: ["Rodrigo", "Jessica"],
+  fotoCapa: "foto-capa.jpg",   // foto do casal (mesma pasta do index.html). Vazio = capa sem foto
+  fotoFoco: "55% 50%",         // ponto do enquadramento: "esquerda-direita cima-baixo"
+  fotoAlt: "",                 // descrição da foto (vazio = "Foto de Rodrigo e Jessica")
   data: "2027-05-15T16:00:00-03:00",
   cidade: "Rio de Janeiro, RJ",
   hashtag: "#RodrigoEJessica",
@@ -699,6 +729,16 @@ function montarTopo(){
   $('#foot-hash').textContent = CONFIG.hashtag;
   if (CONFIG.creditos){ $('#foot-cred').textContent = CONFIG.creditos; $('#foot-cred').hidden = false; }
   $('#rsvp-prazo').textContent = 'Por favor, confirme até ' + CONFIG.prazoRsvp + '.';
+}
+
+function montarFoto(){
+  const hero = $('#topo'), fig = $('#hero-foto'), img = $('#hero-img');
+  if (!CONFIG.fotoCapa){ fig.remove(); return; }
+  hero.classList.add('com-foto');
+  img.alt = CONFIG.fotoAlt || ('Foto de ' + CONFIG.noivos[0] + ' e ' + CONFIG.noivos[1]);
+  img.style.objectPosition = CONFIG.fotoFoco || '50% 50%';
+  img.addEventListener('error', () => { fig.remove(); hero.classList.remove('com-foto'); });
+  img.src = CONFIG.fotoCapa;
 }
 
 function montarCountdown(){
@@ -978,7 +1018,7 @@ let temaInicial = CONFIG.tema;
 try { temaInicial = new URL(location.href).searchParams.get('tema') || CONFIG.tema; } catch(e) {}
 setTema(temaInicial);
 
-montarTopo(); montarCountdown(); montarHistoria(); montarLocais();
+montarTopo(); montarFoto(); montarCountdown(); montarHistoria(); montarLocais();
 montarRsvp(); montarRecadoForm(); montarFaq(); montarMenu();
 montarPresentes();
 
