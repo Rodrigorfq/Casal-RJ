@@ -35,7 +35,9 @@
   --names-size:clamp(3.4rem,12vw,7.6rem); --names-weight:400;
   --names-tracking:0; --names-case:none; --names-lh:1.05;
   --frame:1px solid var(--gold); --frame-radius:0;
-  --orn-display:block; --map-filter:sepia(.15) saturate(.85);
+  --orn-display:none; --map-filter:sepia(.15) saturate(.85);
+  --canto-display:block; --frame-inner:1px solid var(--gold); --photo-ring2:1px solid var(--gold);
+  --hero-wash:radial-gradient(ellipse 75% 55% at 50% 0%,var(--accent-soft),transparent 70%),radial-gradient(ellipse 60% 45% at 100% 100%,var(--blossom),transparent 70%);
   --photo-radius:999px 999px 0 0; --photo-ring:1px solid var(--gold);
   --names-size-split:clamp(3rem,5.8vw,5.4rem);
 }
@@ -102,8 +104,11 @@ section.bloco.alt{background:var(--bg-alt)}
 .sec-head{text-align:center;max-width:620px;margin:0 auto clamp(2.4rem,5vw,3.6rem)}
 .sec-head h2{font-size:clamp(2.2rem,5vw,3.3rem);font-weight:var(--h2-weight);font-style:var(--h2-style)}
 .sec-head p{color:var(--muted);margin-top:1rem}
-.divider{display:flex;align-items:center;gap:1rem;justify-content:center;color:var(--gold);margin:1.2rem auto 0;max-width:200px;font-size:.8rem}
-.divider::before,.divider::after{content:"";flex:1;height:1px;background:currentColor;opacity:.55}
+.divider{display:flex;align-items:center;gap:.6rem;justify-content:center;color:var(--gold);margin:1.3rem auto 0;max-width:260px}
+.divider svg{width:44px;height:12px;flex:none;overflow:visible}
+.divider::before,.divider::after{content:"";flex:1;height:1px}
+.divider::before{background:linear-gradient(90deg,transparent,currentColor)}
+.divider::after{background:linear-gradient(270deg,transparent,currentColor)}
 
 /* ===================== BOTÕES / CAMPOS ===================== */
 .btn{
@@ -150,7 +155,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 
   .nav{background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 }
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
-.brand{font-family:var(--font-script);font-size:1.9rem;text-decoration:none;color:var(--ink);line-height:1}
+.brand{font-family:var(--font-script);font-size:1.9rem;text-decoration:none;color:var(--brand-color,var(--ink));line-height:1}
 :root[data-tema="minimalista"] .brand{font-size:1.1rem;letter-spacing:.2em;font-weight:300}
 .nav-links{display:flex;gap:1.7rem;align-items:center}
 .nav-links a{font-family:var(--font-ui);font-size:.92rem;text-decoration:none;color:var(--muted);transition:color .2s}
@@ -165,12 +170,22 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 
 /* ========================= HERO ========================= */
 .hero{
   position:relative;min-height:100svh;display:grid;place-items:center;text-align:center;
-  padding:7.5rem 1.25rem 5.5rem;overflow:hidden;background:var(--bg);
+  padding:7.5rem 1.25rem 5.5rem;overflow:hidden;background:var(--hero-wash,none),var(--bg);
+  --frame-inset:clamp(.7rem,2vw,1.5rem);--frame-top:calc(64px + clamp(.5rem,1.4vw,1rem));
 }
 .hero::before{
-  content:"";position:absolute;inset:clamp(.7rem,2vw,1.5rem);border:var(--frame);border-radius:var(--frame-radius);
-  pointer-events:none;opacity:.7;
+  content:"";position:absolute;inset:var(--frame-top) var(--frame-inset) var(--frame-inset);
+  border:var(--frame);border-radius:var(--frame-radius);pointer-events:none;opacity:.75;
 }
+.hero::after{
+  content:"";position:absolute;inset:calc(var(--frame-top) + 7px) calc(var(--frame-inset) + 7px) calc(var(--frame-inset) + 7px);
+  border:var(--frame-inner,0 solid transparent);pointer-events:none;opacity:.4;
+}
+.canto{position:absolute;width:60px;height:60px;overflow:visible;pointer-events:none;display:var(--canto-display,none);color:var(--gold)}
+.canto.tl{top:calc(var(--frame-top) - 8px);left:calc(var(--frame-inset) - 8px)}
+.canto.tr{top:calc(var(--frame-top) - 8px);right:calc(var(--frame-inset) - 8px);transform:scaleX(-1)}
+.canto.bl{bottom:calc(var(--frame-inset) - 8px);left:calc(var(--frame-inset) - 8px);transform:scaleY(-1)}
+.canto.br{bottom:calc(var(--frame-inset) - 8px);right:calc(var(--frame-inset) - 8px);transform:scale(-1,-1)}
 .hero-in{position:relative;z-index:1;max-width:760px}
 .hero-kicker{font-family:var(--font-display);font-style:italic;font-size:clamp(1.25rem,3vw,1.6rem);color:var(--muted)}
 :root[data-tema="minimalista"] .hero-kicker{font-style:normal;font-size:1rem;letter-spacing:.06em}
@@ -178,7 +193,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 
   display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:0 .22em;
   font-family:var(--font-script);font-size:var(--names-size);font-weight:var(--names-weight);
   letter-spacing:var(--names-tracking);text-transform:var(--names-case);line-height:var(--names-lh);
-  margin:.5rem 0 1.2rem;color:var(--ink);
+  margin:.5rem 0 1.2rem;color:var(--names-color,var(--ink));
 }
 .names .amp{font-family:var(--font-display);font-style:italic;font-weight:400;font-size:.55em;color:var(--accent)}
 .hero-date{font-family:var(--font-display);font-size:clamp(1.4rem,3.4vw,1.9rem);font-weight:var(--h2-weight)}
@@ -196,8 +211,9 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 
 .hero-grid{position:relative;z-index:1;width:min(1080px,100%);display:grid;justify-items:center;gap:2.2rem}
 .hero-foto{margin:0;position:relative;width:min(340px,74vw);aspect-ratio:4/5}
 .hero-foto::before{content:"";position:absolute;inset:-13px;border:var(--photo-ring);border-radius:var(--photo-radius);pointer-events:none}
+.hero-foto::after{content:"";position:absolute;inset:-21px;border:var(--photo-ring2,0 solid transparent);border-radius:var(--photo-radius);opacity:.4;pointer-events:none}
 .hero-foto img{display:block;width:100%;height:100%;object-fit:cover;border-radius:var(--photo-radius);background:var(--bg-alt)}
-.hero.com-foto{padding-top:6.2rem;padding-bottom:4.5rem}
+.hero.com-foto{padding-top:7.4rem;padding-bottom:4.5rem}
 @media(min-width:980px){
   .hero.com-foto .hero-grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:center;gap:clamp(2.5rem,5vw,5rem)}
   .hero.com-foto .hero-foto{width:min(440px,100%);justify-self:center}
@@ -307,21 +323,27 @@ dialog::backdrop{background:rgba(24,20,20,.55);backdrop-filter:blur(2px)}
 .faq details p{padding:0 0 1.4rem;color:var(--muted);max-width:640px}
 
 /* ========================= RODAPÉ ========================= */
-footer{text-align:center;padding:4.5rem 1.25rem 8rem;border-top:1px solid var(--line)}
-footer .names{font-size:clamp(2.6rem,8vw,4rem);margin:0 0 .6rem}
-footer .hash{font-family:var(--font-ui);color:var(--accent);font-size:.95rem}
-footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margin-top:2rem}
+footer{text-align:center;padding:4.5rem 1.25rem 10rem;border-top:1px solid var(--line);background:var(--foot-bg,transparent);color:var(--foot-ink,inherit)}
+footer .names{font-size:clamp(2.6rem,8vw,4rem);margin:0 0 .6rem;color:var(--foot-ink,var(--ink))}
+footer .names .amp{color:var(--foot-accent,var(--accent))}
+footer .hash{font-family:var(--font-ui);color:var(--foot-accent,var(--accent));font-size:.95rem}
+footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--foot-muted,var(--muted));margin-top:2rem}
 
 /* ================= SELETOR DE TEMA (demo) ================= */
 .temas{
-  position:fixed;left:50%;transform:translateX(-50%);bottom:max(1rem,env(safe-area-inset-bottom));z-index:40;
-  display:flex;align-items:center;gap:.3rem;background:var(--surface);border:1px solid var(--line);
-  padding:.35rem;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.14);
+  position:fixed;left:50%;transform:translateX(-50%);bottom:max(.8rem,env(safe-area-inset-bottom));z-index:40;
+  display:flex;flex-direction:column;gap:.3rem;background:var(--surface);border:1px solid var(--line);
+  padding:.45rem .7rem;border-radius:22px;box-shadow:0 6px 24px rgba(0,0,0,.16);max-width:calc(100% - 1.2rem);
 }
-.temas span{font-family:var(--font-ui);font-size:.78rem;color:var(--muted);padding:0 .6rem 0 .8rem}
-.temas button{font-family:var(--font-ui);font-size:.85rem;border:0;background:transparent;color:var(--ink);padding:.5rem .95rem;border-radius:999px;cursor:pointer}
+.temas .linha{display:flex;align-items:center;justify-content:center;gap:.35rem}
+.temas .rot{font-family:var(--font-ui);font-size:.78rem;color:var(--muted);width:2.3rem;text-align:left}
+.temas button{font-family:var(--font-ui);font-size:.85rem;border:0;background:transparent;color:var(--ink);padding:.45rem .95rem;border-radius:999px;cursor:pointer}
 .temas button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
-@media(max-width:480px){.temas span{display:none}.temas button{padding:.5rem .7rem;font-size:.8rem}}
+.temas .sw{display:block;width:24px;height:24px;margin:0;padding:0;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);cursor:pointer;position:relative;flex-shrink:0}
+.temas .sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.temas .sw-livre{background:conic-gradient(#e53935,#fdd835,#43a047,#00acc1,#3949ab,#d81b60,#e53935)}
+.temas .sw-livre input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;padding:0;border:0}
+@media(max-width:480px){.temas .rot{display:none}.temas button:not(.sw){padding:.45rem .7rem;font-size:.8rem}}
 
 /* Textura de papel só no tema rústico */
 :root[data-tema="rustico"] body::before{
@@ -348,6 +370,21 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
         <ellipse cx="0" cy="-8" rx="4.6" ry="8" transform="rotate(288)"/>
       </g>
       <circle r="2.6" style="fill:var(--gold)"/>
+    </g>
+    <g id="canto">
+      <g fill="none" stroke="currentColor" stroke-width=".8">
+        <path d="M7.5 34A26.5 26.5 0 0 0 34 7.5"/>
+        <path d="M7.5 48A40.5 40.5 0 0 0 48 7.5" opacity=".5"/>
+      </g>
+      <circle cx="7.5" cy="34" r="1.1" fill="currentColor"/><circle cx="34" cy="7.5" r="1.1" fill="currentColor"/>
+      <polygon points="0,-5.5 5.5,0 0,5.5 -5.5,0" style="fill:var(--bg)" stroke="currentColor" stroke-width=".8"/>
+      <polygon points="0,-2 2,0 0,2 -2,0" fill="currentColor"/>
+    </g>
+    <g id="fleuron">
+      <g fill="none" stroke="currentColor" stroke-width=".9" stroke-linecap="round">
+        <polygon points="22,1.5 26.5,6 22,10.5 17.5,6"/><path d="M12 6h2.5M29.5 6H32"/>
+      </g>
+      <circle cx="22" cy="6" r="1.4" fill="currentColor"/><circle cx="9.5" cy="6" r="1" fill="currentColor"/><circle cx="34.5" cy="6" r="1" fill="currentColor"/>
     </g>
     <g id="sprig">
       <g fill="none" stroke="currentColor" stroke-linecap="round">
@@ -390,6 +427,10 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
 </nav>
 
 <header class="hero" id="topo">
+  <svg class="canto tl" viewBox="-8 -8 60 60" aria-hidden="true"><use href="#canto"/></svg>
+  <svg class="canto tr" viewBox="-8 -8 60 60" aria-hidden="true"><use href="#canto"/></svg>
+  <svg class="canto bl" viewBox="-8 -8 60 60" aria-hidden="true"><use href="#canto"/></svg>
+  <svg class="canto br" viewBox="-8 -8 60 60" aria-hidden="true"><use href="#canto"/></svg>
   <div class="sprig tl" aria-hidden="true"><svg viewBox="0 0 200 320" preserveAspectRatio="xMidYMax meet"><use href="#sprig"/></svg></div>
   <div class="sprig tr" aria-hidden="true"><svg viewBox="0 0 200 320" preserveAspectRatio="xMidYMax meet"><use href="#sprig"/></svg></div>
   <div class="sprig bl" aria-hidden="true"><svg viewBox="0 0 200 320" preserveAspectRatio="xMidYMax meet"><use href="#sprig"/></svg></div>
@@ -419,7 +460,7 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
     <div class="container">
       <div class="sec-head">
         <h2>Nossa história</h2>
-        <div class="divider" aria-hidden="true">✦</div>
+        <div class="divider" aria-hidden="true"><svg viewBox="0 0 44 12"><use href="#fleuron"/></svg></div>
       </div>
       <div class="timeline" id="timeline"></div>
     </div>
@@ -429,7 +470,7 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
     <div class="container">
       <div class="sec-head">
         <h2>Cerimônia e festa</h2>
-        <div class="divider" aria-hidden="true">✦</div>
+        <div class="divider" aria-hidden="true"><svg viewBox="0 0 44 12"><use href="#fleuron"/></svg></div>
         <p>Anote o horário e o endereço. Vai ser um dia para guardar com carinho.</p>
       </div>
       <div class="places" id="places"></div>
@@ -442,7 +483,7 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
     <div class="container">
       <div class="sec-head">
         <h2>Lista de presentes</h2>
-        <div class="divider" aria-hidden="true">✦</div>
+        <div class="divider" aria-hidden="true"><svg viewBox="0 0 44 12"><use href="#fleuron"/></svg></div>
         <p>A sua presença já é um presente. Se quiser nos presentear, escolha um item e faça o Pix direto para nós.</p>
       </div>
       <div class="gifts" id="gifts"></div>
@@ -454,7 +495,7 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
     <div class="container">
       <div class="sec-head">
         <h2>Confirme sua presença</h2>
-        <div class="divider" aria-hidden="true">✦</div>
+        <div class="divider" aria-hidden="true"><svg viewBox="0 0 44 12"><use href="#fleuron"/></svg></div>
       </div>
       <div class="form-wrap">
         <p class="rsvp-prazo" id="rsvp-prazo"></p>
@@ -503,7 +544,7 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
     <div class="container">
       <div class="sec-head">
         <h2>Mural de recados</h2>
-        <div class="divider" aria-hidden="true">✦</div>
+        <div class="divider" aria-hidden="true"><svg viewBox="0 0 44 12"><use href="#fleuron"/></svg></div>
         <p>Deixe uma mensagem de carinho. Ela fica aqui para os noivos e para todos os convidados lerem.</p>
       </div>
       <form class="mural-form" id="recado-form" novalidate>
@@ -528,7 +569,7 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
     <div class="container">
       <div class="sec-head">
         <h2>Dúvidas frequentes</h2>
-        <div class="divider" aria-hidden="true">✦</div>
+        <div class="divider" aria-hidden="true"><svg viewBox="0 0 44 12"><use href="#fleuron"/></svg></div>
       </div>
       <div class="faq" id="faq"></div>
     </div>
@@ -582,6 +623,7 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
 <script>
 const CONFIG = {
   tema: "classico",            // "classico" | "minimalista" | "rustico"  (também vale ?tema=rustico na URL)
+  cor: "#6B7A38",              // cor do casamento (verde-oliva). O site monta toda a paleta a partir dela. "" = cores originais do tema. Também vale ?cor=6b7a38 na URL
   mostrarSeletorTema: true,    // deixe false na versão entregue ao casal
   apiUrl: "https://script.google.com/macros/s/AKfycbyTi9mzal92MolyANtgz3IElmU7VkuX4RpmYa0dFewkWXV507iqGqFJ6Kr1i5HA2PSU/exec",  // URL do Apps Script (veja Code.gs). Vazio = modo demonstração
 
@@ -690,25 +732,116 @@ function parseValor(txt){
   return isFinite(n) ? n : 0;
 }
 
-/* ---------- temas ---------- */
+/* ---------- temas e cor do casal ---------- */
 const TEMAS = { classico: 'Clássico', minimalista: 'Minimalista', rustico: 'Rústico' };
-function setTema(t){
-  if (!TEMAS[t]) t = 'classico';
-  document.documentElement.dataset.tema = t;
-  document.querySelectorAll('#temas button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tema === t)));
+const CORES = [
+  ['Verde-oliva', '#6B7A38'], ['Vinho', '#8A3B4B'], ['Azul-marinho', '#2F4A6D'], ['Rosa-antigo', '#B0707A'],
+  ['Sálvia', '#7D9179'], ['Lavanda', '#7B6BA8'], ['Terracota', '#B4583A']
+];
+const HEX_OK = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
+let temaAtual = 'classico', corAtual = '';
+
+function hexRgb(hex){
+  let x = hex.replace('#', ''); if (x.length === 3) x = x.split('').map(c => c + c).join('');
+  const n = parseInt(x, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function rgbHsl([r, g, b]){
+  r /= 255; g /= 255; b /= 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, l = (mx + mn) / 2;
+  let h = 0, s = 0;
+  if (d){
+    s = d / (1 - Math.abs(2 * l - 1));
+    if (mx === r) h = ((g - b) / d) % 6; else if (mx === g) h = (b - r) / d + 2; else h = (r - g) / d + 4;
+    h *= 60; if (h < 0) h += 360;
+  }
+  return [h, s * 100, l * 100];
+}
+function hslHex(h, s, l){
+  s /= 100; l /= 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2;
+  let r = 0, g = 0, b = 0;
+  if (h < 60){ r = c; g = x; } else if (h < 120){ r = x; g = c; } else if (h < 180){ g = c; b = x; }
+  else if (h < 240){ g = x; b = c; } else if (h < 300){ r = x; b = c; } else { r = c; b = x; }
+  const to = v => Math.round((v + m) * 255).toString(16).padStart(2, '0');
+  return '#' + to(r) + to(g) + to(b);
+}
+function luminancia([r, g, b]){
+  const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); };
+  return .2126 * f(r) + .7152 * f(g) + .0722 * f(b);
+}
+function contraste(a, b){
+  const la = luminancia(a), lb = luminancia(b);
+  return (Math.max(la, lb) + .05) / (Math.min(la, lb) + .05);
+}
+
+/* Monta a paleta inteira a partir de UMA cor. O botão/texto colorido é escurecido
+   só o bastante para ter contraste legível com branco (acessibilidade). */
+function paleta(hex, neutro){
+  const [h, S, L] = rgbHsl(hexRgb(hex));
+  const s = S < 8 ? S : Math.min(Math.max(S, 25), 80);
+  let l = L, acc;
+  do { acc = hslHex(h, s, l); l -= 2; } while (contraste(hexRgb(acc), [255, 255, 255]) < 4.8 && l > 6);
+  const lAcc = rgbHsl(hexRgb(acc))[2];
+  const deep = hslHex(h, Math.min(s, 55), Math.max(Math.min(lAcc - 8, 24), 8));
+  return {
+    '--accent': acc, '--accent-ink': '#FFFFFF',
+    '--accent-soft': hslHex(h, Math.min(s, 45), 86),
+    '--bg': neutro ? '#FFFFFF' : hslHex(h, Math.min(s, 32), 96.5),
+    '--bg-alt': hslHex(h, Math.min(s, neutro ? 12 : 34), neutro ? 96 : 90),
+    '--surface': neutro ? '#FFFFFF' : hslHex(h, Math.min(s, 25), 99),
+    '--line': hslHex(h, Math.min(s, 20), neutro ? 86 : 82),
+    '--ink': neutro ? '#161616' : hslHex(h, Math.min(s, 25), 13),
+    '--muted': hslHex(h, Math.min(s, 12), 36),
+    '--orn': hslHex(h, Math.min(s, 40), 46),
+    '--blossom': hslHex(h, Math.min(s, 45), 88),
+    '--names-color': deep, '--brand-color': deep,
+    '--foot-bg': deep, '--foot-ink': hslHex(h, Math.min(s, 30), 95),
+    '--foot-accent': hslHex(h, Math.min(s, 40), 78), '--foot-muted': hslHex(h, Math.min(s, 20), 78)
+  };
+}
+const VARS_COR = ['--accent','--accent-ink','--accent-soft','--bg','--bg-alt','--surface','--line','--ink','--muted',
+  '--orn','--blossom','--names-color','--brand-color','--foot-bg','--foot-ink','--foot-accent','--foot-muted'];
+
+function aplicarCor(){
+  const root = document.documentElement;
+  VARS_COR.forEach(v => root.style.removeProperty(v));
+  if (corAtual) Object.entries(paleta(corAtual, temaAtual === 'minimalista')).forEach(([k, v]) => root.style.setProperty(k, v));
+  document.querySelectorAll('#temas .sw[data-cor]').forEach(b =>
+    b.setAttribute('aria-pressed', String(!!corAtual && b.dataset.cor.toLowerCase() === corAtual.toLowerCase())));
+  const livre = $('#cor-livre'); if (livre && /^#[0-9a-f]{6}$/i.test(corAtual)) livre.value = corAtual;
   const meta = document.querySelector('meta[name=theme-color]');
-  if (meta) meta.content = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#ffffff';
+  if (meta) meta.content = getComputedStyle(root).getPropertyValue('--bg').trim() || '#ffffff';
+}
+function atualizarUrl(){
   try {
-    const u = new URL(location.href); u.searchParams.set('tema', t);
+    const u = new URL(location.href); u.searchParams.set('tema', temaAtual);
+    if (corAtual) u.searchParams.set('cor', corAtual.replace('#', '')); else u.searchParams.delete('cor');
     history.replaceState(null, '', u);
   } catch(e) {}
+}
+function setTema(t){
+  if (!TEMAS[t]) t = 'classico';
+  temaAtual = t; document.documentElement.dataset.tema = t;
+  document.querySelectorAll('#temas button[data-tema]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tema === t)));
+  aplicarCor(); atualizarUrl();
+}
+function setCor(hex){
+  if (!HEX_OK.test(hex || '')) return;
+  corAtual = hex; aplicarCor(); atualizarUrl();
 }
 function montarSeletorTema(){
   const box = $('#temas');
   if (!CONFIG.mostrarSeletorTema){ box.hidden = true; return; }
-  box.append(h('span', {}, 'Tema'));
+  const l1 = h('div', { class:'linha' }, h('span', { class:'rot' }, 'Tema'));
   Object.entries(TEMAS).forEach(([k, nome]) =>
-    box.append(h('button', { type:'button', 'data-tema':k, onclick:() => setTema(k) }, nome)));
+    l1.append(h('button', { type:'button', 'data-tema':k, onclick:() => setTema(k) }, nome)));
+  const l2 = h('div', { class:'linha' }, h('span', { class:'rot' }, 'Cor'));
+  CORES.forEach(([nome, hex]) => l2.append(h('button', {
+    type:'button', class:'sw', 'data-cor':hex, title:nome, 'aria-label':nome, style:'background:' + hex, onclick:() => setCor(hex) })));
+  const livre = h('input', { type:'color', id:'cor-livre', value:'#6b7a38', 'aria-label':'Escolher outra cor' });
+  livre.addEventListener('input', () => setCor(livre.value));
+  l2.append(h('label', { class:'sw sw-livre', title:'Escolher outra cor' }, livre));
+  box.append(l1, l2);
 }
 
 /* ---------- topo e rodapé ---------- */
@@ -1014,8 +1147,14 @@ function montarMenu(){
 
 /* ---------- início ---------- */
 montarSeletorTema();
-let temaInicial = CONFIG.tema;
-try { temaInicial = new URL(location.href).searchParams.get('tema') || CONFIG.tema; } catch(e) {}
+let temaInicial = CONFIG.tema, corInicial = CONFIG.cor || '';
+try {
+  const sp = new URL(location.href).searchParams;
+  temaInicial = sp.get('tema') || CONFIG.tema;
+  corInicial = sp.get('cor') || CONFIG.cor || '';
+} catch(e) {}
+if (/^([0-9a-f]{3}|[0-9a-f]{6})$/i.test(corInicial)) corInicial = '#' + corInicial;
+corAtual = HEX_OK.test(corInicial) ? corInicial : '';
 setTema(temaInicial);
 
 montarTopo(); montarFoto(); montarCountdown(); montarHistoria(); montarLocais();
