@@ -556,7 +556,7 @@ footer .cred{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margi
 const CONFIG = {
   tema: "classico",            // "classico" | "minimalista" | "rustico"  (também vale ?tema=rustico na URL)
   mostrarSeletorTema: true,    // deixe false na versão entregue ao casal
-  apiUrl: "",                  // URL do Apps Script (veja Code.gs). Vazio = modo demonstração
+  apiUrl: "https://script.google.com/macros/s/AKfycbyTi9mzal92MolyANtgz3IElmU7VkuX4RpmYa0dFewkWXV507iqGqFJ6Kr1i5HA2PSU/exec",  // URL do Apps Script (veja Code.gs). Vazio = modo demonstração
 
   noivos: ["Rodrigo", "Jessica"],
   data: "2027-05-15T16:00:00-03:00",
